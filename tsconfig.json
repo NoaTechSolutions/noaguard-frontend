@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src", // Esto permite usar rutas relativas desde la raíz
+    "paths": {
+      "@/*": ["*"] // Alias @ apunta a la carpeta src
+    }
+  },
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
