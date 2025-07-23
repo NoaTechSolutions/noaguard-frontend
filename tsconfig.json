@@ -1,11 +1,31 @@
 {
   "compilerOptions": {
-    "baseUrl": "src", // Esto permite usar rutas relativas desde la raíz
+    "jsx": "react-jsx",
+    "lib": ["DOM", "ESNext"],
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["*"] // Alias @ apunta a la carpeta src
-    }
+      "@/*": ["*"]
+    },
+    "composite": true
   },
-  "files": [],
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "eslint.config.js",
+    "postcss.config.js"
+  ],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }

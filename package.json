@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "clean": "rm -rf dist .tsbuildinfo",
+    "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -21,7 +23,7 @@
     "@eslint/js": "^9.30.1",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/axios": "^0.9.36",
-    "@types/node": "^24.0.15",
+    "@types/node": "^20.10.6",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
@@ -36,9 +38,9 @@
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4"
   },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "description": "Frontend for NoaGuard: a daycare SaaS built with React + Vite + TailwindCSS.",
   "main": "eslint.config.js",
-  "keywords": [],
-  "author": "",
+  "keywords": ["react", "vite", "typescript", "tailwind", "saas", "frontend"],
+  "author": "Israel Esparza",
   "license": "ISC"
 }
