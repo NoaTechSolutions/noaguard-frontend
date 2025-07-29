@@ -1,55 +1,59 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { isTokenValid, getUserFromToken, UserFromToken } from "../utils/auth";
 
-// Tipado del contexto
-interface AuthContextType {
+interface AuthContextProps {
   token: string | null;
-  isAuthenticated: boolean;
+  user: UserFromToken | null;
   login: (token: string) => void;
   logout: () => void;
 }
 
-// Crear el contexto
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-// Hook para acceder al contexto
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
-
-// Componente proveedor
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<UserFromToken | null>(null);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    if (savedToken) {
-      setToken(savedToken);
+    const storedToken = localStorage.getItem("token");
+
+    if (storedToken && isTokenValid(storedToken)) {
+      setToken(storedToken);
+      const storedUser = getUserFromToken(storedToken);
+      setUser(storedUser);
+    } else {
+      localStorage.removeItem("token");
+      setToken(null);
+      setUser(null);
     }
   }, []);
 
-  const login = (newToken: string) => {
-    localStorage.setItem("token", newToken);
-    setToken(newToken);
+  const login = (jwt: string) => {
+    if (!isTokenValid(jwt)) throw new Error("Invalid token");
+
+    const userFromToken = getUserFromToken(jwt);
+    if (!userFromToken) throw new Error("Cannot parse user from token");
+
+    localStorage.setItem("token", jwt);
+    setToken(jwt);
+    setUser(userFromToken);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
+    setUser(null);
   };
 
-  const isAuthenticated = !!token;
-
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  return context;
 };

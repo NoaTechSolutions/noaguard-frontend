@@ -1,21 +1,28 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginForm from "../src/components/LoginForm";
-import Dashboard from "../src/pages/Dashboard";
-import PrivateRoute from "../src/routes/PrivateRoute";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import LoginForm from "./components/LoginForm";
+import DashboardLayout from "./components/layout/DashboardLayout";
+import DashboardHome from "./pages/dashboard/DashboardHome";
+import PrivateRoute from "./routes/PrivateRoute";
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginForm />} />
+
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <DashboardLayout />
             </PrivateRoute>
           }
-        />
+        >
+          <Route index element={<DashboardHome />} />
+          {/* Aquí agregarás más rutas protegidas del dashboard */}
+        </Route>
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );
