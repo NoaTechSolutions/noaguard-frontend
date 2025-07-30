@@ -1,5 +1,16 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { isTokenValid, getUserFromToken, UserFromToken } from "../utils/auth";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  FC,
+} from "react";
+import {
+  isTokenValid,
+  getUserFromToken,
+  UserFromToken,
+} from "../utils/auth";
 
 interface AuthContextProps {
   token: string | null;
@@ -10,17 +21,22 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+// ✅ Tipo claro para el proveedor
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserFromToken | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    if (typeof window === "undefined") return;
 
+    const storedToken = localStorage.getItem("token");
     if (storedToken && isTokenValid(storedToken)) {
       setToken(storedToken);
-      const storedUser = getUserFromToken(storedToken);
-      setUser(storedUser);
+      setUser(getUserFromToken(storedToken));
     } else {
       localStorage.removeItem("token");
       setToken(null);
@@ -29,10 +45,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (jwt: string) => {
-    if (!isTokenValid(jwt)) throw new Error("Invalid token");
+    if (!isTokenValid(jwt)) {
+      throw new Error("Invalid token");
+    }
 
     const userFromToken = getUserFromToken(jwt);
-    if (!userFromToken) throw new Error("Cannot parse user from token");
+    if (!userFromToken) {
+      throw new Error("Cannot extract user from token");
+    }
 
     localStorage.setItem("token", jwt);
     setToken(jwt);
@@ -52,8 +72,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextProps => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
   return context;
 };

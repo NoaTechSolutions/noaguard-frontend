@@ -3,10 +3,12 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react()], // ✅ solo react aquí
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'), // Esto habilita los imports tipo "@/context/AuthContext"
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });
+
+

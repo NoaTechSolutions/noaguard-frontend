@@ -24,7 +24,7 @@
     "node_modules",
     "dist",
     "eslint.config.js",
-    "postcss.config.js"
+    "postcss.config.cjs"
   ],
   "references": [
     { "path": "./tsconfig.app.json" },
