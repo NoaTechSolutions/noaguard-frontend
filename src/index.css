@@ -1,24 +1,8 @@
-@import "flowbite";          /* ✅ DEBE ir antes de @tailwind */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ✅ CSS personalizado */
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  /* 🔥 Eliminado para permitir modo oscuro automático con Tailwind */
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* Opcional: transiciones suaves */
+html {
+  transition: background-color 0.3s, color 0.3s;
 }

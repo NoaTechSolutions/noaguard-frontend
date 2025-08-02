@@ -1,21 +1,21 @@
-// src/components/layout/DashboardLayout.tsx
-import { ReactNode } from 'react';
-import Sidebar from './Sidebar';
-import Topbar from './Topbar';
-import { Outlet } from 'react-router-dom';
+import Sidebar from "./Sidebar";
+import Topbar from "./Topbar";
+import { Outlet } from "react-router-dom";
 
-type Props = {
-  children?: ReactNode; // Esto es opcional si usas <Outlet />
-};
-
-export default function DashboardLayout({ children }: Props) {
+export default function DashboardLayout() {
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+      {/* Sidebar lateral */}
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+
+      {/* Contenedor principal */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* Barra superior */}
         <Topbar />
-        <main className="flex-1 overflow-auto p-4">
-          {children || <Outlet />}
+
+        {/* Contenido dinámico */}
+        <main className="flex-1 overflow-auto p-4 bg-gray-50 dark:bg-gray-900 transition-colors">
+          <Outlet />
         </main>
       </div>
     </div>

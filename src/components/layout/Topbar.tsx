@@ -1,66 +1,44 @@
-
-import { useNavigate } from "react-router-dom";
-import { HiLogout, HiUser, HiMoon, HiSun } from "react-icons/hi";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 
 export default function Topbar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
-  const toggleTheme = () => {
-    const html = document.documentElement;
-    if (html.classList.contains("dark")) {
-      html.classList.remove("dark");
-      setDarkMode(false);
-      localStorage.setItem("theme", "light");
-    } else {
-      html.classList.add("dark");
-      setDarkMode(true);
-      localStorage.setItem("theme", "dark");
-    }
-  };
-
+  // Cargar el tema desde localStorage
   useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-      setDarkMode(true);
+    const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    if (storedTheme) {
+      setTheme(storedTheme);
+      document.documentElement.classList.toggle("dark", storedTheme === "dark");
     }
   }, []);
 
-  return (
-    <header className="bg-white dark:bg-gray-900 shadow px-6 py-4 flex items-center justify-between">
-      <div className="text-lg font-bold text-blue-600 dark:text-yellow-400">
-        NoaGuard
-      </div>
+  // Cambiar tema
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    localStorage.setItem("theme", newTheme);
+  };
 
-      <div className="flex items-center gap-4">
+  return (
+    <header className="flex items-center justify-between bg-white dark:bg-gray-900 px-4 py-3 shadow-sm">
+      <h1 className="text-lg font-semibold text-gray-800 dark:text-white">
+        Dashboard
+      </h1>
+
+      <div className="flex items-center space-x-4">
         <button
           onClick={toggleTheme}
-          className="text-gray-600 dark:text-gray-300 hover:text-yellow-400 dark:hover:text-blue-300"
+          className="rounded-md border border-gray-300 dark:border-gray-700 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
         >
-          {darkMode ? <HiSun /> : <HiMoon />}
+          {theme === "light" ? "🌙" : "☀️"}
         </button>
 
-        <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-          <HiUser />
-          <span className="text-sm">{user?.email}</span>
-        </div>
-
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-1 text-red-600 hover:text-red-800 dark:hover:text-red-400 text-sm"
-        >
-          <HiLogout />
-          Logout
-        </button>
+        <img
+          src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79"
+          alt="avatar"
+          className="h-8 w-8 rounded-full object-cover"
+        />
       </div>
     </header>
   );
