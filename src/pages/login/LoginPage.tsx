@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -29,10 +28,25 @@ const LoginPage = () => {
         password,
       });
 
-      const { token } = response.data;
-      login(token);
+      const { token, email: userEmail, firstName, lastName, nickname, role, userId } = response.data;
+
+      login(token, {
+        userId,
+        email: userEmail,
+        firstName,
+        lastName,
+        nickname,
+        role,
+      });
+
       navigate("/dashboard");
     } catch (err: any) {
+      if (err.response?.data?.code === 4031) {
+        // 🚫 Daycare inactivo
+        navigate("/daycare-inactive", { state: { from4031: true } });
+        return;
+      }
+
       const message = err.response?.data?.message || "Login failed";
       setError(message);
     } finally {
@@ -134,7 +148,7 @@ const LoginPage = () => {
               </form>
 
               <p className="mt-6 text-sm text-center text-gray-400">
-                Don’t have an account yet?{' '}
+                Don’t have an account yet?{" "}
                 <a href="#" className="text-blue-500 hover:underline">
                   Sign up
                 </a>

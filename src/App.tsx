@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/login/LoginPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import PrivateRoute from "./routes/PrivateRoute";
+import DaycareInactivePage from "./pages/DaycareInactivePage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           </PrivateRoute>
         }
       />
+      <Route path="/daycare-inactive" element={<DaycareInactivePage />} />
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );

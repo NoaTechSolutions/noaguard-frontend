@@ -11,7 +11,7 @@ import { UserType } from "../types/UserType";
 
 interface AuthContextType {
   user: UserType | null;
-  login: (token: string) => void;
+  login: (token: string, userData: UserType) => void;
   logout: () => void;
 }
 
@@ -30,10 +30,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         const decoded: any = jwtDecode(token);
         setUser({
+          userId: decoded.userId || 0,
           email: decoded.sub,
-          roles: decoded.roles || [],
-          firstName: decoded.firstName || "John",
-          lastName: decoded.lastName || "Doe",
+          firstName: decoded.firstName || "",
+          lastName: decoded.lastName || "",
+          nickname: decoded.nickname || "",
+          role: decoded.role || "",
         });
       } catch (err) {
         console.error("Invalid token", err);
@@ -42,19 +44,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = (token: string) => {
-    try {
-      const decoded: any = jwtDecode(token);
-      setUser({
-        email: decoded.sub,
-        roles: decoded.roles || [],
-        firstName: decoded.firstName || "John",
-        lastName: decoded.lastName || "Doe",
-      });
-      localStorage.setItem("token", token);
-    } catch (err) {
-      console.error("Invalid token on login", err);
-    }
+  const login = (token: string, userData: UserType) => {
+    setUser(userData);
+    localStorage.setItem("token", token);
   };
 
   const logout = () => {

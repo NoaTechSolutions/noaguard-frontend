@@ -1,7 +1,9 @@
 // types/UserType.ts
 export interface UserType {
+  userId: number;
   email: string;
-  roles: string[];
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
+  nickname?: string;
+  role: string;
 }
