@@ -1,4 +1,3 @@
-// ✅ Archivo actualizado: context/AuthContext.tsx
 import {
   createContext,
   useContext,
@@ -6,7 +5,6 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { jwtDecode } from "jwt-decode";
 import { UserType } from "../types/UserType";
 
 interface AuthContextType {
@@ -26,19 +24,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    const userDataString = localStorage.getItem("userData");
+
+    if (token && userDataString) {
       try {
-        const decoded: any = jwtDecode(token);
-        setUser({
-          userId: decoded.userId || 0,
-          email: decoded.sub,
-          firstName: decoded.firstName || "",
-          lastName: decoded.lastName || "",
-          nickname: decoded.nickname || "",
-          role: decoded.role || "",
-        });
+        const parsedUser: UserType = JSON.parse(userDataString);
+        setUser(parsedUser);
       } catch (err) {
-        console.error("Invalid token", err);
+        console.error("Error parsing user data from localStorage", err);
         setUser(null);
       }
     }
@@ -47,10 +40,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (token: string, userData: UserType) => {
     setUser(userData);
     localStorage.setItem("token", token);
+    localStorage.setItem("userData", JSON.stringify(userData));
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userData");
     setUser(null);
   };
 

@@ -1,21 +1,27 @@
+import { ReactNode, useState } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import { Outlet } from "react-router-dom";
 
-export default function DashboardLayout() {
+type Props = {
+  children?: ReactNode;
+};
+
+export default function DashboardLayout({ children }: Props) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
-      {/* Sidebar lateral */}
-      <Sidebar />
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Sidebar (desktop fijo + móvil off-canvas) */}
+      <Sidebar
+        open={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
 
-      {/* Contenedor principal */}
-      <div className="flex flex-col flex-1 overflow-hidden">
-        {/* Barra superior */}
-        <Topbar />
-
-        {/* Contenido dinámico */}
-        <main className="flex-1 overflow-auto p-4 bg-gray-50 dark:bg-gray-900 transition-colors">
-          <Outlet />
+      {/* Contenido */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Topbar onMenuClick={() => setIsSidebarOpen(true)} />
+        <main className="flex-1 overflow-auto p-4">
+          {children}
         </main>
       </div>
     </div>
